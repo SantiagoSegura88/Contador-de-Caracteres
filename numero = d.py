@@ -36,16 +36,43 @@ class ModernApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Contador de Caracteres")
-        self.geometry("600x600")
+        self.geometry("500x500")
         self.configure(bg=BG_COLOR)
         self.resizable(False, False)
         self.usuario_actual = None
         cargar_usuarios()
-        self._build_login_register()
+        self.inicio()
 
     def _clear(self):
         for widget in self.winfo_children():
             widget.destroy()
+
+
+    def inicio(self):
+            self._clear()
+            shadow = tk.Frame(self, bg=SHADOW)
+            shadow.place(relx=0.5, rely=0.16, anchor="n", width=440, height=285)
+            card = tk.Frame(self, bg=CARD_BG, bd=0, highlightthickness=2, highlightbackground=SEPARATOR)
+            card.place(relx=0.5, rely=0.18, anchor="n", width=420, height=260)
+
+            tk.Label(card, text="Contador de Caracteres", font=("Segoe UI", 24, "bold"), fg=ACCENT, bg=CARD_BG).pack(pady=(30, 10))
+            tk.Frame(card, bg=SEPARATOR, height=2).pack(fill="x", padx=30, pady=(0, 20))
+            tk.Label(
+                card,
+                text="Sistema experimental enfocado en contar la cantidad de caracteres de una frase",
+                font=("Segoe UI", 14),
+                fg=TEXT_COLOR,
+                bg=CARD_BG,
+                wraplength=360,
+                justify="center"
+            ).pack(pady=(0, 20))
+            
+
+            btn_frame = tk.Frame(card, bg=CARD_BG)
+            btn_frame.pack(pady=10)
+            self._modern_button(btn_frame, "Continuar", self._build_login_register).pack(fill="x", pady=(0, 10))
+        
+
 
     def _build_login_register(self):
         self._clear()
@@ -85,7 +112,7 @@ class ModernApp(tk.Tk):
         def registrar():
             usuario = user_var.get().strip()
             contraseña = pass_var.get()
-            if not usuario or not contraseña:
+            if not usuario or not contraseña or usuario == "Usuario" or contraseña == "Contraseña":
                 msg_var.set("Debe completar ambos campos.")
                 self.after(2500, lambda: msg_var.set(""))
                 return
@@ -97,7 +124,7 @@ class ModernApp(tk.Tk):
             guardar_usuarios()
             self.usuario_actual = usuario
             msg_var.set("¡Registrado exitosamente!")
-            self.after(1200, self._main_app)
+            self.after(700, self._main_app)
 
         self._modern_button(card, "Registrar", registrar).pack(pady=15)
         tk.Label(card, textvariable=msg_var, font=("Segoe UI", 11), fg=ACCENT, bg=CARD_BG).pack()
@@ -127,7 +154,7 @@ class ModernApp(tk.Tk):
         def iniciar():
             usuario = user_var.get().strip()
             contraseña = pass_var.get()
-            if not usuario or usuario not in usuarios:
+            if not usuario or usuario not in usuarios or usuario == "Usuario":
                 msg_var.set("Usuario no encontrado.")
                 self.after(2500, lambda: msg_var.set(""))
                 return
@@ -187,7 +214,7 @@ class ModernApp(tk.Tk):
         return btn
 
     def _arrow_button(self, parent, command):
-        btn = tk.Button(parent, text="←", font=("Segoe UI", 16, "bold"), fg=ACCENT, bg=BTN_COLOR,
+        btn = tk.Button(parent, text="🡸", font=("Segoe UI", 15, "bold"), fg=ACCENT, bg=BTN_COLOR,
                         activebackground=BTN_HOVER, activeforeground=BG_COLOR, bd=0, relief="flat",
                         command=command, cursor="hand2", width=2, height=1)
         btn.bind("<Enter>", lambda e: btn.config(bg=BTN_HOVER))
